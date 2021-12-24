@@ -1,9 +1,4 @@
 .cart-button {
-    border: none;
-    background-color: transparent;
-}
-
-.cart-button {
     display: inline-block;
     width: 19px;
     height: 19px;
@@ -14,36 +9,19 @@
     top: -19px;
     font-size: 12px;
     line-height: 19px;
+    border: none;
+    background-color: transparent;
 }
 
-.basket {
-    position: absolute;
-    z-index: 3;
-    background: white;
-    padding: 10px;
-    border: 1px solid #ebebeb;
-    border-radius: 3px;
-    font-size: 14px;
-}
-
-.hidden {
+.modal {
     display: none;
-}
-
-.basketRow {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
-    margin-bottom: 10px;
-    border-bottom: 1px solid #ebebeb;
-    padding-bottom: 10px;
-}
-
-.basketHeader {
-    font-weight: bold;
-}
-
-.basketTotal {
-    font-weight: bold;
-    text-align: right;
+    width: 800px;
+    min-height: 600px;
+    position: absolute;
+    top: 100px;
+    left: calc(50% - 400px);
+    border: 1px solid #ccc;
+    background-color: white;
+    border-radius: 3px;
+    padding: 20px;
 }

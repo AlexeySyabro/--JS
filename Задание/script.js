@@ -71,6 +71,14 @@ function getCounter() {
     getCount() {
       return this.count;
     }
+
+    getTitle() {
+      return this.good.getTitle()
+    }
+
+    getPrice() {
+      return this.good.getPrice() * this.count
+    }
   
     add() {
       this.count++;
@@ -86,6 +94,17 @@ function getCounter() {
   class Cart {
     constructor(){
       this.list = []
+
+      this.view = new CartView('.modal')
+    }
+
+    open() {
+      this.view.render(this.list)
+      this.view.open()
+    }
+
+    close() {
+      this.view.close()
     }
   
     add(good) {
@@ -96,7 +115,8 @@ function getCounter() {
       } else {
         this.list.push(new GoodStack(good))
       }
-  
+      
+      this.view.render(this.list)
     }
   
     remove(id) {
@@ -109,7 +129,8 @@ function getCounter() {
           this.list.splice(idx, 1)
         }
       } 
-  
+
+      this.view.render(this.list)
     }
   }
   
@@ -117,14 +138,20 @@ function getCounter() {
     constructor(cart){
       this.list = [];
       this.cart = cart;
+
+      this.view = new ShowcaseView('.goods-list')
     }
+
+    
   
     fetchGoods() {
       this.list = [
-        new Good({id: 1, title: 'Футболка', price: 140}),
-        new Good({id: 2, title: 'Брюки', price: 320}),
-        new Good({id: 3, title: 'Галстук', price: 24})
+        new Good({id: 1, title: 'T-shirt', price: 140}),
+        new Good({id: 2, title: 'Trousers', price: 320}),
+        new Good({id: 3, title: 'Tie', price: 24})
       ]
+
+      this.view.render(this.list)
     }
   
     addToCart(id) {
@@ -135,11 +162,64 @@ function getCounter() {
       }
     }
   }
+
+  class ShowcaseView {
+    constructor(containerSelector) {
+      this.container = document.querySelector(containerSelector)
+    }
+
+  render(list) {
+    this.container.textContent = ' ';
+
+      const template = list.map((good) => `
+      <div class="card">
+        <h3>${good.getTitle()}</h3>
+        <p>${good.getPrice()} $</p>
+      </div>
+      `).join('');
+
+      this.container.insertAdjacentHTML('afterbegin', template);
+    }
+  }
   
+  class CartView {
+    constructor(containerSelector) {
+      this.container = document.querySelector(containerSelector)
+      this.closeBtn = this.container.querySelector('#close-btn')
+      this.listContainer = this.container.querySelector('.cart-list')
+
+      this.closeBtn.addEventListener('click', this.close.bind(this))
+    }
+
+    open() {
+      this.container.style.display = 'block'
+    }
+
+    close() {
+      this.container.style.display = 'none'
+    }
+
+    render(list) {
+    this.listContainer.textContent = '';
+
+      const template = list.map((good) => `
+      <div class="card">
+        <h3>${good.getTitle()} x${good.getCount()}</h3>
+        <p>${good.getPrice()} $</p>
+      </div>
+      `).join('');
+
+      this.listContainer.insertAdjacentHTML('afterbegin', template);
+    }
+  }
   
   const cart = new Cart()
   const showcase = new Showcase(cart)
-  
+
+  const cartBtn = document.querySelector('.cart-button')
+
+  cartBtn.addEventListener('click', cart.open.bind(cart))
+
   showcase.fetchGoods();
   
   showcase.addToCart(1)
@@ -152,10 +232,3 @@ function getCounter() {
   
   console.log(showcase, cart)
 
-
-
-const basketEl = document.querySelector('.basket');
-
-document.querySelector('.cart-button').addEventListener('click', () => {
-    basketEl.classList.toggle('hidden');
-});
